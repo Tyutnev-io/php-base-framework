@@ -1,0 +1,17 @@
+{
+    "name": "artem/framework",
+    "description": "Base framework",
+    "type": "library",
+    "license": "MIT",
+    "authors": [{
+        "name": "Artem Tyutnev",
+        "email": "artem.tyutnev.work@gmail.com"
+    }],
+    "minimum-stability": "stable",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "app\\": "/"
+        }
+    }
+}
