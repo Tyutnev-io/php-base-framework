@@ -23,6 +23,17 @@ class RouteHelper
     const NAMESPACE = '\\app\\controllers\\';
 
     /**
+     * Converts url from config to regular expression
+     * @see config/app.php
+     * @param string
+     * @return string
+     */
+    public static function toRegExp($pattern)
+    {
+        return '~' . (preg_replace('~<arg>~', '(\w+)', $pattern)) . '~';
+    }
+
+    /**
      * @param string|array $route
      * @param array|null $args
      * @return void
@@ -32,8 +43,9 @@ class RouteHelper
     {
         if(is_string($route)) $route = explode('/', $route);
 
-        $ControllerName = array_shift($route);
-        $actionName = array_shift($route);
+        $ControllerName = ucfirst(array_shift($route)) . 'Controller';
+        $actionName = ucfirst(array_shift($route));
+        $actionName = $actionName ? 'action' . $actionName : 'actionIndex';
         $pathToController = self::PATH . $ControllerName . '.php';
 
         if(is_null($args)) $args = $route;
