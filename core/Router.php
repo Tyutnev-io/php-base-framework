@@ -64,12 +64,19 @@ class Router
     /**
      * Define args in URL
      * If the route is defined in the configuration
-     * @param string
+     * @param string $subject
+     * @param string $urlPattern
      * @return array
      */
-    private function defineArgs($urlPattern)
+    private function defineArgs($subject, $urlPattern)
     {
-        return [];
+        $matches = [];
+        preg_match_all($urlPattern, $subject, $matches, PREG_SET_ORDER);
+        
+        $matches = array_pop($matches);
+        array_shift($matches);
+
+        return $matches;
     }
 
     /**
@@ -80,13 +87,14 @@ class Router
      */
     private function findRoute()
     {
-        $url = '~' . implode('/', $this->url) . '~';
+        $subject = implode('/', $this->url);
 
         foreach($this->routes as $urlPattern => $route)
         {
-            if(preg_match($url, $urlPattern))
+            $urlPattern = RouteHelper::toRegExp($urlPattern);
+            if(preg_match($urlPattern, $subject))
             {
-                RouteHelper::execute($route, $this->defineArgs($url));
+                RouteHelper::execute($route, $this->defineArgs($subject, $urlPattern));
                 return true;
             }
         }
@@ -101,7 +109,7 @@ class Router
      */
     private function homePage()
     {
-        RouteHelper::execute(['SiteController', 'actionIndex']);
+        RouteHelper::execute(['site']);
         return true;
     }
 
